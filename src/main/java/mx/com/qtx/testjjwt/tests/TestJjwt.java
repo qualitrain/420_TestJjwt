@@ -2,6 +2,8 @@ package mx.com.qtx.testjjwt.tests;
 
 //import java.nio.charset.Charset;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.crypto.SecretKey;
 
@@ -13,7 +15,8 @@ public class TestJjwt {
 
 	public static void main(String[] args) {
 //		test_GeneracionLlave();
-		test_CreacionTokenJWT();
+//		test_CreacionTokenJWT();
+		test_CreacionTokenJWTconMap();
 		
 	}
 	
@@ -52,6 +55,16 @@ public class TestJjwt {
 		System.out.println("*** test_CreacionTokenJWT() ***");
 		String token = TokensJwtUtil.generarToken("alex");
 		System.out.println("Token:" + token);		
+	}
+	
+	private static String test_CreacionTokenJWTconMap(){
+		System.out.println("*** test_CreacionTokenJWTconMap() ***");
+		Map<String,Object> mapClaims = new HashMap<>();
+		mapClaims.put("rol","Agente");
+		mapClaims.put("permisos", "0777");
+		String token = TokensJwtUtil.generarToken("beto",mapClaims);
+		System.out.println("Token:" + token);
+		return token;
 	}
 
 }

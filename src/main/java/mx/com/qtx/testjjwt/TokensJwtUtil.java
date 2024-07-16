@@ -2,6 +2,7 @@ package mx.com.qtx.testjjwt;
 
 import java.security.KeyPair;
 import java.util.Date;
+import java.util.Map;
 import java.util.UUID;
 
 import javax.crypto.SecretKey;
@@ -53,5 +54,26 @@ public class TokensJwtUtil {
 			                  .compact();
 		
 		return tokenJwt;
+	}
+	
+	public static String generarToken(String nombreUsuario, Map<String,Object> mapClaims) {
+		SecretKey llave = generarLlave(AlgoritmoCifradoLlaveSimetrico.HmacSHA512);
+		long duracionTokensMilis = 1000 * 60 * 60 * 10;
+		Date ahora = new Date();
+		Date expiracion = new Date(System.currentTimeMillis() + duracionTokensMilis);
+		String id = UUID.randomUUID()
+				        .toString()
+				        .replace("-", "");
+		
+		Claims claims = Jwts.claims().add(mapClaims).build();
+		
+		return Jwts.builder()
+					  .id(id)
+					  .issuedAt(ahora)
+					  .expiration(expiracion)
+					  .subject(nombreUsuario)
+					  .claims(claims)
+		              .signWith(llave)
+		              .compact();	
 	}
 }
