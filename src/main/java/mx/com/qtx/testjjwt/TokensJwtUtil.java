@@ -10,6 +10,7 @@ import java.util.function.Function;
 import javax.crypto.SecretKey;
 
 import io.jsonwebtoken.*;
+import io.jsonwebtoken.io.Encoders;
 
 public class TokensJwtUtil {
 	public static SecretKey generarLlave(AlgoritmoCifradoLlaveSimetrico algoritmo) {
@@ -192,6 +193,36 @@ public class TokensJwtUtil {
 			return true;
 		}
 		return false;
+	}
+	
+	private static String getLlaveBase64(SecretKey llave) {
+		return Encoders.BASE64.encode(llave.getEncoded());
+	}
+
+	public boolean tokenFirmadoPerteneceAUsuario(String tokenFirmado, String nombreUsuario, SecretKey skLlave) {
+		String usuarioEnToken = extraerUsuarioTokenFirmado(tokenFirmado, skLlave);
+		if(!nombreUsuario.equals(usuarioEnToken))
+			return false;
+		if(tokenFirmadoExpirado(tokenFirmado, skLlave))
+			return false;
+		return true;
+	}
+	
+	public boolean tokenValido(String tokenFirmado, SecretKey skLlave) {
+		try {
+			extraerJwsClaimsTokenFirmado(tokenFirmado, skLlave);
+		}
+		catch(Exception ex) {
+//			System.out.println(ex.getClass().getName());
+			return false;
+		}
+		return true;
+	}
+	
+	public String extraerBodyTokenFirmado(String tokenFirmado, SecretKey skLlave){
+		//Usar con tokens firmados
+		Jws<Claims> jwsClaims = extraerJwsClaimsTokenFirmado(tokenFirmado, skLlave);
+		return jwsClaims.getPayload().toString();
 	}
 	
 }
