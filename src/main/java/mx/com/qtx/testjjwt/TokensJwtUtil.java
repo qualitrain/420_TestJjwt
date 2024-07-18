@@ -165,7 +165,7 @@ public class TokensJwtUtil {
 				        .getSubject();
 	}
 	
-	public Date extraerExpiracionTokenFirmado(String token, SecretKey skLlave) {
+	public static Date extraerExpiracionTokenFirmado(String token, SecretKey skLlave) {
 		Jws<Claims> contenido = extraerJwsClaimsTokenFirmado(token, skLlave);
 		return contenido.getPayload()
 				        .getExpiration();
@@ -199,7 +199,7 @@ public class TokensJwtUtil {
 		return Encoders.BASE64.encode(llave.getEncoded());
 	}
 
-	public boolean tokenFirmadoPerteneceAUsuario(String tokenFirmado, String nombreUsuario, SecretKey skLlave) {
+	public static boolean tokenFirmadoPerteneceAUsuario(String tokenFirmado, String nombreUsuario, SecretKey skLlave) {
 		String usuarioEnToken = extraerUsuarioTokenFirmado(tokenFirmado, skLlave);
 		if(!nombreUsuario.equals(usuarioEnToken))
 			return false;
@@ -208,7 +208,7 @@ public class TokensJwtUtil {
 		return true;
 	}
 	
-	public boolean tokenValido(String tokenFirmado, SecretKey skLlave) {
+	public static boolean tokenValido(String tokenFirmado, SecretKey skLlave) {
 		try {
 			extraerJwsClaimsTokenFirmado(tokenFirmado, skLlave);
 		}
@@ -219,7 +219,7 @@ public class TokensJwtUtil {
 		return true;
 	}
 	
-	public String extraerBodyTokenFirmado(String tokenFirmado, SecretKey skLlave){
+	public static String extraerBodyTokenFirmado(String tokenFirmado, SecretKey skLlave){
 		//Usar con tokens firmados
 		Jws<Claims> jwsClaims = extraerJwsClaimsTokenFirmado(tokenFirmado, skLlave);
 		return jwsClaims.getPayload().toString();
